@@ -2,24 +2,23 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { app } from '@/firebase/firebaseConfig'; // Adjust path as needed
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/app/Firebase/FirebaseConfig'; // your existing export
 
 export default function Home() {
   const router = useRouter();
-  const auth = getAuth(app);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        router.push('/login'); // Not logged in → redirect to login
+        router.push('/login'); // redirect to login if not logged in
       } else {
-        router.push('/home'); // Logged in → redirect to homepage
+        router.push('/home'); // redirect to home if logged in
       }
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
-  return <div>Loading...</div>; // Optional loading UI
+  return <div>Loading...</div>;
 }
